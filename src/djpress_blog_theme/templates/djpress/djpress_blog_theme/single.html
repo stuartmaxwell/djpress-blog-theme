@@ -1,0 +1,31 @@
+{% extends 'djpress/djpress_blog_theme/base.html' %}
+{% load djpress_tags %}
+{% block content %}
+  {% get_post_categories as post_categories %}
+  {% if "microblog" in post_categories %}
+    {% post_wrap tag="article" class="article-card micro" %}
+      <header>
+        <div class="article-meta">
+          {% post_date %}
+          {% post_categories outer_tag="span" pre_text=" &bull; " separator=" | " %}
+          {% post_author pre_text=" &bull; " %}
+        </div>
+      </header>
+      {% post_content outer_tag="div" outer_class="content-body" read_more_link_class="read-more" read_more_text="Read Article &rarr;" %}
+      {% post_tags outer_tag="div" outer_class="article-meta" pre_text="Tags: " %}
+    {% end_post_wrap %}
+  {% else %}
+    {% post_wrap tag="article" class="article-card" %}
+      <header>
+        <div class="article-meta">
+          {% post_date %}
+          {% post_categories outer_tag="span" pre_text=" &bull; " separator=" | " %}
+          {% post_author pre_text=" &bull; " %}
+        </div>
+        {% post_title outer_tag="h2" outer_class="article-title" %}
+      </header>
+      {% post_content outer_tag="div" outer_class="content-body" read_more_link_class="read-more" read_more_text="Read Article &rarr;" %}
+      {% post_tags outer_tag="div" outer_class="article-meta" pre_text="Tags: " %}
+    {% end_post_wrap %}
+  {% endif %}
+{% endblock content %}

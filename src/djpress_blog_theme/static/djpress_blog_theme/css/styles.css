@@ -1,0 +1,599 @@
+/* ==========================================
+1. THEME CONFIGURATION & VARIABLES
+========================================== */
+:root {
+  /* --- Typography Constants --- */
+  --font-family-sans:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  --font-family-mono: "Menlo", "Monaco", "Courier New", monospace;
+
+  /* --- Layout Dimensions --- */
+  --width-sidebar: 300px;
+  --width-content-max: 1160px; /* Updated to 1400px */
+
+  /* --- Spacing System --- */
+  --spacing-sm: 0.5rem; /* 8px */
+  --spacing-md: 1rem; /* 16px */
+  --spacing-lg: 2rem; /* 32px */
+
+  /* --- Color Palette: Light Mode (Default) --- */
+  --bg-body: #ffffff;
+  --bg-sidebar: #2d3436;
+  --bg-code: #f1f2f6;
+
+  --text-main: #2d3436;
+  --text-sidebar: #dfe6e9;
+  --text-sidebar-muted: #b2bec3;
+
+  --color-accent: #0984e3;
+  --color-accent-secondary: #6c5ce7;
+  --color-border: #e0e0e0;
+
+  --btn-bg: rgba(255, 255, 255, 0.1);
+  --btn-hover: rgba(255, 255, 255, 0.2);
+}
+
+/* --- Color Palette: Dark Mode --- */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg-body: #121212;
+    --bg-sidebar: #000000;
+    --bg-code: #1e1e1e;
+
+    --text-main: #e0e0e0;
+    --text-sidebar: #b2bec3;
+    --text-sidebar-muted: #636e72;
+
+    --color-accent: #74b9ff;
+    --color-accent-secondary: #a29bfe;
+    --color-border: #2d3436;
+
+    --btn-bg: rgba(255, 255, 255, 0.05);
+    --btn-hover: rgba(255, 255, 255, 0.15);
+  }
+}
+
+/* --- Manual Theme Override --- */
+[data-theme="dark"] {
+  --bg-body: #121212;
+  --bg-sidebar: #000000;
+  --bg-code: #1e1e1e;
+
+  --text-main: #e0e0e0;
+  --text-sidebar: #b2bec3;
+  --text-sidebar-muted: #636e72;
+
+  --color-accent: #74b9ff;
+  --color-accent-secondary: #a29bfe;
+  --color-border: #2d3436;
+
+  --btn-bg: rgba(255, 255, 255, 0.05);
+  --btn-hover: rgba(255, 255, 255, 0.15);
+}
+
+/* ==========================================
+2. RESET & BASE STYLES
+========================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Strict reset to maintain grid/sidebar alignment logic */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+/* Allow keywords for cleaner animations (Modern Browsers) */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    interpolate-size: allow-keywords;
+  }
+}
+
+body {
+  font-family: var(--font-family-sans);
+  line-height: 1.6;
+  color: var(--text-main);
+  background-color: var(--bg-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Media reset */
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* Consistent font sizing for form elements */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* Modern text wrapping */
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+p {
+  text-wrap: pretty; /* Prevents orphans on last line */
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  text-wrap: balance; /* Balances lines for headings */
+}
+
+/* Links & Focus Styles */
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover,
+a:focus {
+  text-decoration: underline;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* ==========================================
+3. LAYOUT ENGINE (CSS GRID)
+
+Note: if modifying the desktop/mobile breakpoint, look for comments with `breakpoint` to ensure all styles are covered.
+========================================== */
+.layout-container {
+  display: grid;
+  min-height: 100vh;
+  /* Mobile Default: Stacked vertical layout */
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "sidebar"
+    "main";
+}
+
+/* Desktop breakpoint */
+@media (min-width: 1024px) {
+  .layout-container {
+    grid-template-columns: var(--width-sidebar) 1fr;
+    grid-template-areas: "sidebar main";
+  }
+
+  /* Optional: Move sidebar to the right */
+  body.sidebar-right .layout-container {
+    grid-template-columns: 1fr var(--width-sidebar);
+    grid-template-areas: "main sidebar";
+  }
+
+  /* Sticky sidebar behavior */
+  .sidebar-inner {
+    position: sticky;
+    top: var(--spacing-lg);
+    max-height: calc(100vh - var(--spacing-lg));
+    overflow-y: auto;
+  }
+}
+
+/* ==========================================
+4. SIDEBAR MODULE
+========================================== */
+.sidebar {
+  grid-area: sidebar;
+  background-color: var(--bg-sidebar);
+  color: var(--text-sidebar);
+  padding: var(--spacing-lg);
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* Desktop breakpoint */
+@media (min-width: 1024px) {
+  .sidebar {
+    border-bottom: none;
+    border-right: 1px solid transparent;
+  }
+  body.sidebar-right .sidebar {
+    border-left: 1px solid var(--color-border);
+  }
+}
+
+/* Sidebar Links */
+.sidebar a {
+  color: inherit;
+  text-decoration: none;
+}
+.sidebar a:hover,
+.sidebar a:focus {
+  color: white;
+}
+
+/* Profile Area */
+.sidebar-header {
+  text-align: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+.avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid var(--bg-body);
+  margin: 0 auto var(--spacing-md);
+  background-color: var(--text-sidebar-muted);
+}
+
+.blog-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: var(--spacing-sm);
+}
+
+.blog-subtitle {
+  font-size: 0.9rem;
+  color: var(--text-sidebar-muted);
+  font-weight: 400;
+}
+
+/* Navigation List */
+.sidebar-nav {
+  margin-bottom: var(--spacing-lg);
+}
+.sidebar-nav ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  text-align: center;
+}
+.sidebar-nav a {
+  display: block;
+  padding: var(--spacing-sm);
+  font-weight: 500;
+}
+
+/* Search Box */
+.search-form {
+  width: 100%;
+  max-width: 240px;
+  margin: 0 auto var(--spacing-lg);
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.search-form input[type="search"] {
+  width: 100%;
+  background: var(--btn-bg);
+  border: 1px solid var(--text-sidebar-muted);
+  color: var(--text-sidebar);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.search-form input[type="search"]::placeholder {
+  color: var(--text-sidebar-muted);
+  opacity: 0.7;
+}
+
+.search-form input[type="search"]:focus {
+  background: var(--btn-hover);
+  border-color: var(--color-accent);
+  outline: none;
+}
+
+.search-form button {
+  background: transparent;
+  border: none;
+  color: var(--text-sidebar);
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+}
+
+.search-form button:hover {
+  color: var(--color-accent);
+}
+
+.search-form .search-icon {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Social Media Icons */
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-md);
+  margin-top: auto;
+  margin-bottom: var(--spacing-lg);
+}
+.social-icon {
+  width: 24px;
+  height: 24px;
+}
+
+/* Theme Toggle UI */
+.theme-toggle-container {
+  margin-bottom: var(--spacing-lg);
+  text-align: center;
+}
+.theme-toggle {
+  background: var(--btn-bg);
+  border: 1px solid var(--text-sidebar-muted);
+  color: var(--text-sidebar);
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.theme-toggle:hover {
+  background: var(--btn-hover);
+  border-color: var(--text-sidebar);
+}
+
+/* Copyright */
+.copyright {
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--text-sidebar-muted);
+  margin-bottom: var(--spacing-lg);
+}
+
+/* Mobile breakpoint - must be one less than desktop start (Sidebar becomes Top Bar) */
+@media (max-width: 1023px) {
+  .sidebar {
+    text-align: center;
+  }
+  .sidebar-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .sidebar-nav ul {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .sidebar-header {
+    margin-bottom: var(--spacing-sm);
+  }
+  .sidebar-nav {
+    margin-bottom: var(--spacing-sm);
+  }
+  .search-form {
+    margin: 0 auto var(--spacing-sm);
+  }
+  .social-links {
+    margin-bottom: var(--spacing-sm);
+  }
+  .theme-toggle-container {
+    margin-bottom: var(--spacing-sm);
+    text-align: center;
+  }
+  .copyright {
+    margin-bottom: var(--spacing-sm);
+  }
+}
+
+/* ==========================================
+5. MAIN CONTENT MODULE
+========================================== */
+.main-content {
+  grid-area: main;
+  padding: var(--spacing-lg);
+  max-width: var(--width-content-max);
+  margin: 0 auto;
+  width: 100%;
+  min-width: 0;
+}
+
+/* Page Heading (Search Results, Archives, Tags) */
+.page-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 3rem; /* Space between title and first article */
+  padding-bottom: 1.5rem; /* Space between text and underline */
+  border-bottom: 1px solid var(--color-border);
+  color: var(--text-main);
+  line-height: 1.3;
+}
+
+/* Standard Article Card */
+.article-card {
+  margin-bottom: 4rem;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 2rem;
+}
+.article-card:last-child {
+  border-bottom: none;
+}
+
+.article-meta {
+  font-size: 0.85rem;
+  color: var(--text-sidebar-muted);
+  margin-bottom: var(--spacing-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.article-title {
+  font-size: 2rem;
+  margin-bottom: var(--spacing-md);
+  line-height: 1.2;
+}
+.article-title a {
+  text-decoration: none;
+  color: var(--text-main);
+}
+.article-title a:hover {
+  color: var(--color-accent);
+}
+
+.read-more {
+  display: inline-block;
+  font-weight: 600;
+}
+
+/* Microblog Variant */
+.article-card.micro {
+  background-color: var(--bg-code);
+  padding: var(--spacing-md);
+  border-radius: 8px;
+  border-left: 4px solid var(--color-accent-secondary);
+  border-bottom: none;
+  margin-bottom: 3rem;
+}
+.article-card.micro .article-meta {
+  margin-bottom: var(--spacing-sm);
+  font-size: 0.8rem;
+}
+.article-card.micro .content-body p:last-child {
+  margin-bottom: 0;
+}
+
+/* Permalink Star for Microblog */
+.article-card.micro .permalink-star {
+  text-decoration: none;
+  margin-right: 4px;
+  display: inline-block;
+  transition:
+    transform 0.2s ease,
+    text-shadow 0.2s ease;
+  cursor: pointer;
+}
+.article-card.micro .permalink-star:hover,
+.article-card.micro .permalink-star:focus {
+  text-decoration: none;
+  transform: scale(1.2);
+  text-shadow: 0 0 8px var(--color-accent);
+}
+
+/* ==========================================
+TYPOGRAPHY SYSTEM (.content-body)
+========================================== */
+.content-body {
+  font-size: 1.1rem;
+  margin-bottom: var(--spacing-md);
+  overflow-wrap: break-word;
+}
+
+.content-body p {
+  margin-bottom: 1.5rem;
+}
+.content-body li {
+  margin-bottom: 0.5rem;
+}
+
+.content-body ul,
+.content-body ol {
+  margin-bottom: 1.5rem;
+  padding-left: 1.5rem;
+}
+
+/* Blockquotes */
+.content-body blockquote {
+  border-left: 4px solid var(--color-accent);
+  margin: 0 0 1.5rem 0;
+  padding-left: 1rem;
+  font-style: italic;
+  color: var(--text-sidebar-muted);
+}
+
+/* Tables (Responsive Scroll) */
+.content-body table {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  margin-bottom: 1.5rem;
+}
+.content-body th,
+.content-body td {
+  text-align: left;
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+.content-body th {
+  font-weight: 600;
+}
+
+/* 1. Base style for ALL code elements */
+.content-body code {
+  font-family: var(--font-family-mono);
+  font-size: 0.85em;
+  background: var(--bg-code);
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+}
+
+/* 2. Styling for the Code Block Wrapper (<pre>) */
+.content-body pre {
+  background: var(--bg-code);
+  padding: 1rem;
+  border-radius: 4px;
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--color-border);
+  max-width: 100%;
+
+  /* Apply font consistency to the block wrapper */
+  font-family: var(--font-family-mono);
+  font-size: 0.85em;
+}
+
+/* 3. Reset for code tags INSIDE pre tags. Prevents double-padding and double-shrinking of font size. */
+.content-body pre code {
+  font-size: inherit;
+  color: inherit;
+  background: transparent;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+}
+
+/* ==========================================
+UTILITY classes
+========================================== */
+.inline {
+  display: inline-block;
+}
