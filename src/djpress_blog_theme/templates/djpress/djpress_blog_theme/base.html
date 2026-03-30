@@ -9,7 +9,14 @@
     <link rel="stylesheet"
           href="{% static 'djpress_blog_theme/css/styles.css' %}"
           {% if csp_nonce %}nonce="{{ csp_nonce }}"{% endif %}>
-    {% rss_link %} {% djpress_header %}
+    <style>
+      :root {
+        --bg-sidebar: {% get_theme_setting "bg-sidebar" "#0077a1" %};
+        --dark-bg-sidebar: {% get_theme_setting "dark-bg-sidebar" "#09191f" %};
+      }
+    </style>
+    {% rss_link %}
+    {% djpress_header %}
   </head>
   {% get_theme_setting "sidebar_position" as sidebar_position %}
   <body {% if sidebar_position == "right" %}class="sidebar-right"{% endif %}>
@@ -169,7 +176,12 @@
             </button>
           </div>
           <footer class="copyright">
-            {% get_theme_setting "copyright_message" "© {% now "Y" %} All rights reserved." %}
+            {% get_theme_setting "copyright_message" as copyright_message %}
+            {% if copyright_message %}
+              {{ copyright_message|safe }}
+            {% else %}
+              © {% now "Y" %} All rights reserved.
+            {% endif %}
           </footer>
         </div>
       </aside>

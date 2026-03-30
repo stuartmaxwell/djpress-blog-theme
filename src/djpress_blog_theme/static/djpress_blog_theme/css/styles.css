@@ -16,17 +16,20 @@
   --spacing-md: 1rem; /* 16px */
   --spacing-lg: 2rem; /* 32px */
 
+  /* --- Configurable colors: also configure in base.html --- */
+  --bg-sidebar: #0077a1;
+  --dark-bg-sidebar: #09191f;
+
   /* --- Color Palette: Light Mode (Default) --- */
   --bg-body: #ffffff;
-  --bg-sidebar: #2d3436;
   --bg-code: #f1f2f6;
 
   --text-main: #2d3436;
   --text-sidebar: #dfe6e9;
   --text-sidebar-muted: #b2bec3;
 
-  --color-accent: #0984e3;
-  --color-accent-secondary: #6c5ce7;
+  --color-accent: #005aa5;
+  --color-accent-secondary: #532fa6;
   --color-border: #e0e0e0;
 
   --btn-bg: rgba(255, 255, 255, 0.1);
@@ -37,15 +40,15 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg-body: #121212;
-    --bg-sidebar: #000000;
+    --bg-sidebar: var(--dark-bg-sidebar);
     --bg-code: #1e1e1e;
 
     --text-main: #e0e0e0;
     --text-sidebar: #b2bec3;
     --text-sidebar-muted: #636e72;
 
-    --color-accent: #74b9ff;
-    --color-accent-secondary: #a29bfe;
+    --color-accent: #74b5ff;
+    --color-accent-secondary: #c18df3;
     --color-border: #2d3436;
 
     --btn-bg: rgba(255, 255, 255, 0.05);
@@ -54,17 +57,17 @@
 }
 
 /* --- Manual Theme Override --- */
-[data-theme="dark"] {
+:root[data-theme="dark"] {
   --bg-body: #121212;
-  --bg-sidebar: #000000;
+  --bg-sidebar: var(--dark-bg-sidebar);
   --bg-code: #1e1e1e;
 
   --text-main: #e0e0e0;
   --text-sidebar: #b2bec3;
   --text-sidebar-muted: #636e72;
 
-  --color-accent: #74b9ff;
-  --color-accent-secondary: #a29bfe;
+  --color-accent: #74b5ff;
+  --color-accent-secondary: #c18df3;
   --color-border: #2d3436;
 
   --btn-bg: rgba(255, 255, 255, 0.05);
