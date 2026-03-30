@@ -10,7 +10,7 @@ requires-python = ">=3.10"
 dependencies = [
     "djpress>=0.23.0",
 ]
-license = {text = "MIT"}
+license = { file = "LICENSE.md" }
 
 [build-system]
 requires = ["pdm-backend"]
